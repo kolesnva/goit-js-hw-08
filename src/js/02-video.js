@@ -27,7 +27,7 @@ function getTimeFromStorage() {
 
 function setTimeToStorage(time) {
   try {
-    localStorage.setItem("videoplayer-current-time", JSON.stringify(time));
+    localStorage.setItem(STORAGE_TIME, JSON.stringify(time));
   } catch (error) {
     console.log(error);
   }

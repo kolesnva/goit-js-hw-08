@@ -1,57 +1,47 @@
 const throttle = require('lodash.throttle');
+const formRef = document.querySelector('.feedback-form');
+const FEEDBACK_DATA_KEY = "feedback-form-state";
 
-const refs = {
-  form: document.querySelector('.feedback-form'),
-  userMail: document.querySelector('input'),
-  userMessage: document.querySelector('textarea'),
-};
+window.addEventListener('DOMContentLoaded', onPageLoad);
+formRef.addEventListener('input', throttle(saveDataToStorage,500));
+formRef.addEventListener('submit', onFormSubmit);
 
-const STORAGE_MAIL_KEY = "user-mail";
-const STORAGE_MESSAGE_KEY = "text-message";
+function onPageLoad() {
+  if (localStorage) {
+    loadStorageData();
+  }
+}
 
-refs.userMail.addEventListener('input', throttle(onMailInput, 500));
-refs.userMessage.addEventListener('input', throttle(onMessageInput, 500));
-refs.form.addEventListener('submit', onFormSubmit);
+function saveDataToStorage() {
+  const savedFormData = {
+    email: formRef.elements.email.value,
+    message: formRef.elements.message.value,
+  }
 
-makeUserMail();
-makeUserMessage();
+  try {
+    const savedFormDataJSON = JSON.stringify(savedFormData);
+    localStorage.setItem(FEEDBACK_DATA_KEY, savedFormDataJSON);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-function onMailInput(event) {
-  const email = event.target.value;
+function loadStorageData() {
+  const savedFormData = JSON.parse(localStorage.getItem(FEEDBACK_DATA_KEY));
 
-  localStorage.setItem(STORAGE_MAIL_KEY, email);
-};
-
-function onMessageInput(event) {
-  const message = event.target.value;
-
-  localStorage.setItem(STORAGE_MESSAGE_KEY, message);
-};
+  if (!savedFormData) return;
+  formRef.elements.email.value = savedFormData.email;
+  formRef.elements.message.value = savedFormData.message;
+}
 
 function onFormSubmit(event) {
   event.preventDefault();
 
-  console.log(refs.userMail.value);
-  console.log(refs.userMessage.value);
+  const tempStorageData = localStorage.getItem(FEEDBACK_DATA_KEY);
+
+  console.log(tempStorageData);
 
   event.currentTarget.reset();
 
-  localStorage.removeItem(STORAGE_MAIL_KEY);
-  localStorage.removeItem(STORAGE_MESSAGE_KEY);
-};
-
-function makeUserMail() {
-  const savedMail = localStorage.getItem(STORAGE_MAIL_KEY);
-
-  if (savedMail) {
-    refs.userMail.value = savedMail;
-  }
-};
-
-function makeUserMessage() {
-  const savedMessage = localStorage.getItem(STORAGE_MESSAGE_KEY);
-
-  if (savedMessage) {
-    refs.userMessage.value = savedMessage;
-  }
+  localStorage.removeItem(FEEDBACK_DATA_KEY);
 };
