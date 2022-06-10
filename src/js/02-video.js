@@ -9,9 +9,9 @@ const currentTime = getTimeFromStorage();
 
 window.addEventListener('DOMContentLoaded', onPageLoad);
 
-setPlayerStartTime();
+setCurrentTime();
 
-function setPlayerStartTime() {
+function setCurrentTime() {
   if (currentTime) {
     player.setCurrentTime(currentTime.seconds);
   };
