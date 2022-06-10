@@ -12,8 +12,11 @@ window.addEventListener('DOMContentLoaded', onPageLoad);
 setCurrentTime();
 
 function setCurrentTime() {
-  if (!currentTime) return;
-  player.setCurrentTime(currentTime.seconds);
+  if (!currentTime) {
+    return;
+  } else {
+    player.setCurrentTime(currentTime.seconds);
+  }
 }
 
 function onPageLoad() {
